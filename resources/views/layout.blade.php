@@ -10,8 +10,20 @@
     <script src="https://kit.fontawesome.com/83d2746f22.js" crossorigin="anonymous"></script>
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-2 d-flex justify-content-between">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ route('listar_series') }}">Home</a>
+        @auth
+        <a href="/sair" class="nav-link text-danger">Sair</a>
+        @endauth
+
+        @guest
+            <a href="/entrar" class="text-primary">Entrar</a>
+        @endguest
+    </div>
+</nav>
 <div class="container">
-    <div class="container-fluid py-5 p-5 mb-2 bg-light rounded-2">
+    <div class="container-fluid py-5 p-5 bg-dark bg-opacity-10 mb-2 rounded-2">
         <h1>@yield('cabecalho')</h1>
     </div>
 
