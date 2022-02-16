@@ -1,5 +1,6 @@
 <?php
 
+use App\Mail\NovaSerie;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -54,4 +55,29 @@ Route::get('/sair', function () {
    return redirect('/entrar');
 })->name('sair');
 
+Route::get('/visualizando-email', function () {
+    return new NovaSerie(
+        'A Série',
+        1,
+        5
+    );
+});
 
+Route::get('/enviando-email', function () {
+    $email = new NovaSerie(
+        'A Série',
+        1,
+        5
+    );
+
+    $email->subject = 'Nova Série Adicionada';
+
+    $user = (object)[
+        'email' => 'franklyn@teste.com',
+        'name' => 'Franklyn'
+    ];
+
+    \Illuminate\Support\Facades\Mail::to($user)->send($email);
+
+    return 'E-mail enviado!';
+});

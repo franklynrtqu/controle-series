@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NovaSerie;
 use App\Http\Requests\SeriesFormRequest;
-use App\Models\Episodio;
 use App\Models\Serie;
-use App\Models\Temporada;
 use App\Services\CriadorDeSerie;
 use App\Services\RemovedorDeSerie;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class SeriesController extends Controller
 {
@@ -30,11 +28,23 @@ class SeriesController extends Controller
 
     public function store(SeriesFormRequest $request, CriadorDeSerie $criadorDeSerie)
     {
+        $nome = $request->nome;
+        $qtdTemporadas = $request->qtd_temporadas;
+        $qtdEpisodios = $request->ep_por_temporada;
+
+        $capa = null;
+        if($request->hasFile('capa')) {
+            $capa = $request->file('capa')->store('serie');
+        }
+
         $serie = $criadorDeSerie->criarSerie(
-            $request->nome,
-            $request->qtd_temporadas,
-            $request->ep_por_temporada
+            $nome,
+            $qtdTemporadas,
+            $qtdEpisodios,
+            $capa
         );
+
+        NovaSerie::dispatch($nome, $qtdTemporadas, $qtdEpisodios);
 
         $request->session()
             ->flash(
